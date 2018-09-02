@@ -7,6 +7,7 @@
 import linecache
 import ambient
 import time
+import requests
 
 DEVICE_NAME='28-01131e75b0c8'
 
@@ -25,6 +26,14 @@ if __name__ == "__main__":
     while True:
       print "raw value = " + DS18B20().raw
       print "temperature = " + str(DS18B20().value)
+
+      if DS18B20().value < 25:
+        # turn on of the water heater
+        requests.get('https://maker.ifttt.com/trigger/under_water_temp/with/key/<ifttt key>')
+      elif DS18B20().value > 27:
+        # turn off of the water heater
+        requests.get('https://maker.ifttt.com/trigger/over_water_temp/with/key/<ifttt key>')
+
 
       json={}
       json["d3"]=DS18B20().value
